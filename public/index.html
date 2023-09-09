@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ChurchEvents</title>
+</head>
+<body>
+<div id="con">
+
+</div>
+
+<template id="slideImageTemplate">
+    <div class="slide hidden">
+        <img src="">
+    </div>
+</template>
+
+<template id="slideTemplate">
+    <div class="slide hidden">
+        <h1>No img</h1>
+        <p id="description">description</p>
+        <p id="start">start</p>
+        <p id="end">end</p>
+        <p id="location">loc</p>
+        <p id="link">link</p>
+    </div>
+</template>
+
+</body>
+
+<script>
+    const INTERVAL = 5000; // Screen time each slide gets
+    const container = document.getElementById("con");
+    const slideImageTemplate = document.getElementById("slideImageTemplate");
+    const slideTemplate = document.getElementById("slideTemplate");
+    /**
+     * @type {Event[]}
+     */
+    let events = [];
+    let slides = [];
+
+    async function fetchEvents() {
+        const response = await fetch("/events");
+        events = await response.json();
+        generateSlides();
+    }
+
+    fetchEvents();
+
+    function generateSlides() {
+        for (const event of events) {
+            if (event.image !== "") {
+                const slide = slideImageTemplate.content.cloneNode(true);
+                const img = slide.querySelector("img")
+                img.src = event.image;
+                container.appendChild(slide);
+            } else {
+                const slide = slideTemplate.content.cloneNode(true);
+
+                container.appendChild(slide);
+            }
+        }
+        slides = document.getElementsByClassName("slide");
+    }
+
+    let currentSlide = 0;
+    function nextSlide() {
+        slides[currentSlide].classList.add("hidden");
+        currentSlide++;
+        if(currentSlide >= slides.length) currentSlide = 0;
+        slides[currentSlide].classList.remove("hidden");
+    }
+
+    const timer = setInterval(nextSlide, INTERVAL);
+
+    class Event {
+        id;
+        title;
+        start;
+        end;
+        allDay;
+        description;
+        link;
+        location;
+        image
+    }
+</script>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        background-color: black;
+    }
+
+    .slide {
+        /*position: absolute;*/
+        width: 100%;
+        background-color: black;
+    }
+
+    #con {
+        position: absolute;
+        background-color: black;
+        display: flex;
+        width: 100%;
+        height: 100vh;
+        flex-direction: column;
+        align-content: center;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    img {
+        width: 100%;
+    }
+</style>
+</html>
