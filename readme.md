@@ -2,6 +2,12 @@
 
 Creates an event slideshow based on events from churchtools.
 
+## Usage:
+
+1. Fill in the variables in the docker-compose.yml file
+2. Run `docker-compose up -d`
+3. Access the app on http://localhost:3000
+
 ## Development:
 
 #### clone the repo

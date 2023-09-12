@@ -1,0 +1,12 @@
+version: "3"
+services:
+  churchevents:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - URL=https://<your church>.church.tools/api # ChurchTools API URL
+      - TOKEN=123 # ChurchTools API Token
+      - MONTHS=3 # How far in the future should events be fetched
+      - CALENDARS = 1, 8 # Which calendars should be fetched
