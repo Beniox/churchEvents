@@ -3,6 +3,7 @@ import 'dotenv/config';
 import express from 'express';
 import { ChurchToolEvent, Event } from './types';
 import { logger } from './utils/logger';
+import cron from 'node-cron';
 
 const app = express();
 
@@ -48,6 +49,7 @@ const AXIOS_HEADERS = {
  * @returns {Promise<void>}
  */
 async function getAllEvents() {
+  events = [];
   for (const id of CALENDAR_IDS) {
     try {
       const response = await axios.get(
@@ -113,3 +115,8 @@ app.listen(process.env.PORT ?? 3000, () => {
 });
 
 getAllEvents();
+
+cron.schedule('59 59 23 * * *', () => {
+  logger.log('Fetching events');
+  getAllEvents();
+});
