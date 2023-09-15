@@ -39,6 +39,14 @@
     let events = [];
     let slides = [];
 
+    let timer;
+
+    let currentSlide = 0;
+
+    /**
+     * Fetches events from the server
+     * @returns {Promise<void>}
+     */
     async function fetchEvents() {
         const response = await fetch("/events");
         events = await response.json();
@@ -47,6 +55,9 @@
 
     fetchEvents();
 
+    /**
+     * Generates slides from the events and starts the timer
+     */
     function generateSlides() {
         for (const event of events) {
             if (event.image !== "") {
@@ -57,24 +68,26 @@
                 container.appendChild(slide);
             } else {
                 // Text slide -> Coming soon
-                const slide = slideTemplate.content.cloneNode(true);
+                // const slide = slideTemplate.content.cloneNode(true);
 
                 // container.appendChild(slide);
 
             }
         }
         slides = document.getElementsByClassName("slide");
+        slides[0].classList.remove("hidden");
+        timer = setInterval(nextSlide, INTERVAL);
     }
 
-    let currentSlide = 0;
+    /**
+     * Shows the next slide
+     */
     function nextSlide() {
         slides[currentSlide].classList.add("hidden");
         currentSlide++;
-        if(currentSlide >= slides.length) currentSlide = 0;
+        if (currentSlide >= slides.length) currentSlide = 0;
         slides[currentSlide].classList.remove("hidden");
     }
-
-    const timer = setInterval(nextSlide, INTERVAL);
 
     class Event {
         id;
