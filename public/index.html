@@ -50,14 +50,17 @@
     function generateSlides() {
         for (const event of events) {
             if (event.image !== "") {
+                // Image slide
                 const slide = slideImageTemplate.content.cloneNode(true);
                 const img = slide.querySelector("img")
                 img.src = event.image;
                 container.appendChild(slide);
             } else {
+                // Text slide -> Coming soon
                 const slide = slideTemplate.content.cloneNode(true);
 
-                container.appendChild(slide);
+                // container.appendChild(slide);
+
             }
         }
         slides = document.getElementsByClassName("slide");
